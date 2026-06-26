@@ -43,10 +43,12 @@ fun AddCardScreen(
         }
     }
 
+    val colors = LocalAppColors.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F111A))
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -63,13 +65,13 @@ fun AddCardScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TextButton(onClick = onBack) {
-                    Text("Back", color = Color(0xFFA5B4FC), fontSize = 16.sp)
+                    Text("Back", color = colors.textSecondary, fontSize = 16.sp)
                 }
                 Text(
                     text = "Add Card",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = colors.textPrimary
                 )
                 Spacer(modifier = Modifier.width(48.dp))
             }
@@ -78,7 +80,7 @@ fun AddCardScreen(
 
             Text(
                 text = "Select Language",
-                color = Color(0xFFA5B4FC),
+                color = colors.textSecondary,
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
             )
@@ -89,7 +91,8 @@ fun AddCardScreen(
                 Button(
                     onClick = { viewModel.onLanguageChanged("EN") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (language == "EN") Color(0xFF7C4DFF) else Color(0xFF1B1E36)
+                        containerColor = if (language == "EN") colors.primary else colors.borderColor.copy(alpha = 0.2f),
+                        contentColor = if (language == "EN") Color.White else colors.textPrimary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
@@ -99,7 +102,8 @@ fun AddCardScreen(
                 Button(
                     onClick = { viewModel.onLanguageChanged("FR") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (language == "FR") Color(0xFF7C4DFF) else Color(0xFF1B1E36)
+                        containerColor = if (language == "FR") colors.primary else colors.borderColor.copy(alpha = 0.2f),
+                        contentColor = if (language == "FR") Color.White else colors.textPrimary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
@@ -112,7 +116,7 @@ fun AddCardScreen(
 
             Text(
                 text = "Select Card Type",
-                color = Color(0xFFA5B4FC),
+                color = colors.textSecondary,
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.Start).padding(bottom = 8.dp)
             )
@@ -123,7 +127,8 @@ fun AddCardScreen(
                 Button(
                     onClick = { viewModel.onCardTypeChanged("Word") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (cardType == "Word") Color(0xFF10B981) else Color(0xFF1B1E36)
+                        containerColor = if (cardType == "Word") colors.accent else colors.borderColor.copy(alpha = 0.2f),
+                        contentColor = if (cardType == "Word") Color.White else colors.textPrimary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
@@ -133,7 +138,8 @@ fun AddCardScreen(
                 Button(
                     onClick = { viewModel.onCardTypeChanged("Phrase") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (cardType == "Phrase") Color(0xFF10B981) else Color(0xFF1B1E36)
+                        containerColor = if (cardType == "Phrase") colors.accent else colors.borderColor.copy(alpha = 0.2f),
+                        contentColor = if (cardType == "Phrase") Color.White else colors.textPrimary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.weight(1f)
@@ -147,15 +153,15 @@ fun AddCardScreen(
             OutlinedTextField(
                 value = word,
                 onValueChange = { viewModel.onWordChanged(it) },
-                label = { Text("Word / Phrase", color = Color(0xFFA5B4FC)) },
-                textStyle = LocalTextStyle.current.copy(color = Color.White),
+                label = { Text("Word / Phrase", color = colors.textSecondary) },
+                textStyle = LocalTextStyle.current.copy(color = colors.textPrimary),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     hintLocales = LocaleList(wordLocale)
                 ),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF7C4DFF),
-                    unfocusedBorderColor = Color(0xFF2C3258),
-                    cursorColor = Color(0xFF7C4DFF)
+                    focusedBorderColor = colors.primary,
+                    unfocusedBorderColor = colors.borderColor,
+                    cursorColor = colors.primary
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -166,15 +172,15 @@ fun AddCardScreen(
             OutlinedTextField(
                 value = translation,
                 onValueChange = { viewModel.onTranslationChanged(it) },
-                label = { Text("Farsi Translation", color = Color(0xFFA5B4FC)) },
-                textStyle = LocalTextStyle.current.copy(color = Color.White),
+                label = { Text("Farsi Translation", color = colors.textSecondary) },
+                textStyle = LocalTextStyle.current.copy(color = colors.textPrimary),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     hintLocales = LocaleList(Locale("fa"))
                 ),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF7C4DFF),
-                    unfocusedBorderColor = Color(0xFF2C3258),
-                    cursorColor = Color(0xFF7C4DFF)
+                    focusedBorderColor = colors.primary,
+                    unfocusedBorderColor = colors.borderColor,
+                    cursorColor = colors.primary
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -193,7 +199,10 @@ fun AddCardScreen(
 
             Button(
                 onClick = { viewModel.saveCard(getCurrentTimeEpochMs()) },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C4DFF)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colors.primary,
+                    contentColor = Color.White
+                ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth().height(48.dp)
             ) {

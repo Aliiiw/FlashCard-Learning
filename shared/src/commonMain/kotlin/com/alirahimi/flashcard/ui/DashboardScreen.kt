@@ -17,10 +17,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alirahimi.flashcard.domain.model.FlashCard
 
+import androidx.compose.runtime.*
+import com.alirahimi.flashcard.ui.ThemeMode
+import com.alirahimi.flashcard.ui.CustomThemePresets
+import com.alirahimi.flashcard.ui.LocalAppColors
+
 @Composable
 fun DashboardScreen(
     cards: List<FlashCard>,
     dueCardsCount: Int,
+    themeMode: ThemeMode,
+    customPresetColor: Color,
+    onThemeModeChanged: (ThemeMode) -> Unit,
+    onCustomColorChanged: (Color) -> Unit,
     onStartReview: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     onNavigateToCardList: () -> Unit
@@ -31,10 +40,85 @@ fun DashboardScreen(
     val box4 = cards.count { it.box == 4 }
     val box5 = cards.count { it.box == 5 }
 
+    val colors = LocalAppColors.current
+    var showThemeDialog by remember { mutableStateOf(false) }
+
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = {
+                Text(
+                    "Select Theme / پوسته",
+                    color = colors.textPrimary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Text("Theme Mode / حالت پوسته:", color = colors.textSecondary, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        ThemeMode.values().forEach { mode ->
+                            Button(
+                                onClick = { onThemeModeChanged(mode) },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (themeMode == mode) colors.primary else colors.borderColor.copy(alpha = 0.2f),
+                                    contentColor = if (themeMode == mode) Color.White else colors.textPrimary
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text(mode.name, fontSize = 12.sp)
+                            }
+                        }
+                    }
+
+                    if (themeMode == ThemeMode.Custom) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text("Custom Color / رنگ دلخواه:", color = colors.textSecondary, fontSize = 14.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            CustomThemePresets.forEach { preset ->
+                                Box(
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .background(preset.color, shape = RoundedCornerShape(18.dp))
+                                        .clickable { onCustomColorChanged(preset.color) }
+                                        .padding(2.dp)
+                                ) {
+                                    if (customPresetColor == preset.color) {
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .background(Color.White.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text("OK / تأیید", color = colors.primary)
+                }
+            },
+            containerColor = colors.surface
+        )
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F111A))
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -43,20 +127,28 @@ fun DashboardScreen(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Leitner Box",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Leitner Box",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = colors.textPrimary
+                )
+                TextButton(onClick = { showThemeDialog = true }) {
+                    Text("🎨 Theme", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                }
+            }
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 10.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1E36))
+                colors = CardDefaults.cardColors(containerColor = colors.cardBackground)
             ) {
                 Column(
                     modifier = Modifier.padding(20.dp),
@@ -65,22 +157,22 @@ fun DashboardScreen(
                     Text(
                         text = "Due for Review",
                         fontSize = 16.sp,
-                        color = Color(0xFFA5B4FC)
+                        color = colors.textSecondary
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "$dueCardsCount",
                         fontSize = 48.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = if (dueCardsCount > 0) Color(0xFF10B981) else Color.White
+                        color = if (dueCardsCount > 0) colors.accent else colors.textPrimary
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = onStartReview,
                         enabled = dueCardsCount > 0,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF7C4DFF),
-                            disabledContainerColor = Color(0xFF2C3258)
+                            containerColor = colors.primary,
+                            disabledContainerColor = colors.borderColor.copy(alpha = 0.5f)
                         ),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.fillMaxWidth().height(48.dp)
@@ -158,7 +250,7 @@ fun DashboardScreen(
                     onClick = onNavigateToAddCard,
                     shape = RoundedCornerShape(12.dp),
                     border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF7C4DFF)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.primary),
                     modifier = Modifier.weight(1f).height(48.dp)
                 ) {
                     Text(text = "Add Card", fontSize = 16.sp, fontWeight = FontWeight.Bold)
@@ -167,10 +259,10 @@ fun DashboardScreen(
                 Button(
                     onClick = onNavigateToCardList,
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1B1E36)),
+                    colors = ButtonDefaults.buttonColors(containerColor = colors.cardBackground),
                     modifier = Modifier.weight(1f).height(48.dp)
                 ) {
-                    Text(text = "Word List", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(text = "Word List", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = colors.textPrimary)
                 }
             }
         }

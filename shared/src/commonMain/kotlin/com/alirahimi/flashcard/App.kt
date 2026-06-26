@@ -11,6 +11,8 @@ import com.alirahimi.flashcard.ui.DashboardScreen
 import com.alirahimi.flashcard.ui.ReviewScreen
 import org.koin.compose.koinInject
 
+import com.alirahimi.flashcard.ui.*
+
 enum class Screen {
     Dashboard,
     AddCard,
@@ -20,50 +22,65 @@ enum class Screen {
 
 @Composable
 fun App() {
-    MaterialTheme {
-        var currentScreen by remember { mutableStateOf(Screen.Dashboard) }
+    var currentThemeMode by remember { mutableStateOf(ThemeMode.Dark) }
+    var selectedCustomPresetColor by remember { mutableStateOf(CustomThemePresets[0].color) }
 
-        val addCardViewModel = koinInject<AddCardViewModel>()
-        val reviewViewModel = koinInject<ReviewViewModel>()
-        val cardListViewModel = koinInject<CardListViewModel>()
+    val appColors = when (currentThemeMode) {
+        ThemeMode.Dark -> DarkColors
+        ThemeMode.Light -> LightColors
+        ThemeMode.Custom -> getCustomColors(selectedCustomPresetColor)
+    }
 
-        val cards by cardListViewModel.cards.collectAsState()
-        val dueCards by reviewViewModel.cardsToReview.collectAsState()
+    CompositionLocalProvider(LocalAppColors provides appColors) {
+        MaterialTheme {
+            var currentScreen by remember { mutableStateOf(Screen.Dashboard) }
 
-        LaunchedEffect(currentScreen) {
-            if (currentScreen == Screen.Dashboard) {
-                cardListViewModel.loadCards()
-                reviewViewModel.loadCards(getCurrentTimeEpochMs())
-            }
-        }
+            val addCardViewModel = koinInject<AddCardViewModel>()
+            val reviewViewModel = koinInject<ReviewViewModel>()
+            val cardListViewModel = koinInject<CardListViewModel>()
 
-        when (currentScreen) {
-            Screen.Dashboard -> {
-                DashboardScreen(
-                    cards = cards,
-                    dueCardsCount = dueCards.size,
-                    onStartReview = { currentScreen = Screen.Review },
-                    onNavigateToAddCard = { currentScreen = Screen.AddCard },
-                    onNavigateToCardList = { currentScreen = Screen.CardList }
-                )
+            val cards by cardListViewModel.cards.collectAsState()
+            val dueCards by reviewViewModel.cardsToReview.collectAsState()
+
+            LaunchedEffect(currentScreen) {
+                if (currentScreen == Screen.Dashboard) {
+                    cardListViewModel.loadCards()
+                    reviewViewModel.loadCards(getCurrentTimeEpochMs())
+                }
             }
-            Screen.AddCard -> {
-                AddCardScreen(
-                    viewModel = addCardViewModel,
-                    onBack = { currentScreen = Screen.Dashboard }
-                )
-            }
-            Screen.Review -> {
-                ReviewScreen(
-                    viewModel = reviewViewModel,
-                    onBack = { currentScreen = Screen.Dashboard }
-                )
-            }
-            Screen.CardList -> {
-                CardListScreen(
-                    viewModel = cardListViewModel,
-                    onBack = { currentScreen = Screen.Dashboard }
-                )
+
+            when (currentScreen) {
+                Screen.Dashboard -> {
+                    DashboardScreen(
+                        cards = cards,
+                        dueCardsCount = dueCards.size,
+                        themeMode = currentThemeMode,
+                        customPresetColor = selectedCustomPresetColor,
+                        onThemeModeChanged = { currentThemeMode = it },
+                        onCustomColorChanged = { selectedCustomPresetColor = it },
+                        onStartReview = { currentScreen = Screen.Review },
+                        onNavigateToAddCard = { currentScreen = Screen.AddCard },
+                        onNavigateToCardList = { currentScreen = Screen.CardList }
+                    )
+                }
+                Screen.AddCard -> {
+                    AddCardScreen(
+                        viewModel = addCardViewModel,
+                        onBack = { currentScreen = Screen.Dashboard }
+                    )
+                }
+                Screen.Review -> {
+                    ReviewScreen(
+                        viewModel = reviewViewModel,
+                        onBack = { currentScreen = Screen.Dashboard }
+                    )
+                }
+                Screen.CardList -> {
+                    CardListScreen(
+                        viewModel = cardListViewModel,
+                        onBack = { currentScreen = Screen.Dashboard }
+                    )
+                }
             }
         }
     }

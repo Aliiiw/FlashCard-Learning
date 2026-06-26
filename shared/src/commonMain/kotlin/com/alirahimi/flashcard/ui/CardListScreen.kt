@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alirahimi.flashcard.presentation.CardListViewModel
 
+import com.alirahimi.flashcard.ui.LocalAppColors
+
 @Composable
 fun CardListScreen(
     viewModel: CardListViewModel,
@@ -25,6 +27,8 @@ fun CardListScreen(
     val selectedBox by viewModel.selectedBoxFilter.collectAsState()
     val cards by viewModel.filteredCards.collectAsState()
 
+    val colors = LocalAppColors.current
+
     LaunchedEffect(Unit) {
         viewModel.loadCards()
     }
@@ -32,7 +36,7 @@ fun CardListScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F111A))
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -49,13 +53,13 @@ fun CardListScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TextButton(onClick = onBack) {
-                    Text("Back", color = Color(0xFFA5B4FC), fontSize = 16.sp)
+                    Text("Back", color = colors.textSecondary, fontSize = 16.sp)
                 }
                 Text(
                     text = "Word List",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = colors.textPrimary
                 )
                 Spacer(modifier = Modifier.width(48.dp))
             }
@@ -65,12 +69,12 @@ fun CardListScreen(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
-                label = { Text("Search word or translation", color = Color(0xFFA5B4FC)) },
-                textStyle = LocalTextStyle.current.copy(color = Color.White),
+                label = { Text("Search word or translation", color = colors.textSecondary) },
+                textStyle = LocalTextStyle.current.copy(color = colors.textPrimary),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF7C4DFF),
-                    unfocusedBorderColor = Color(0xFF2C3258),
-                    cursorColor = Color(0xFF7C4DFF)
+                    focusedBorderColor = colors.primary,
+                    unfocusedBorderColor = colors.borderColor,
+                    cursorColor = colors.primary
                 ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -83,15 +87,15 @@ fun CardListScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Lang:", color = Color(0xFFA5B4FC), fontSize = 14.sp)
+                Text("Lang:", color = colors.textSecondary, fontSize = 14.sp)
                 listOf("ALL", "EN", "FR").forEach { lang ->
                     InputChip(
                         selected = selectedLanguage == lang,
                         onClick = { viewModel.onLanguageFilterChanged(lang) },
-                        label = { Text(lang, color = Color.White) },
+                        label = { Text(lang, color = if (selectedLanguage == lang) Color.White else colors.textPrimary) },
                         colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = Color(0xFF7C4DFF),
-                            containerColor = Color(0xFF1B1E36)
+                            selectedContainerColor = colors.primary,
+                            containerColor = colors.borderColor.copy(alpha = 0.2f)
                         ),
                         border = null
                     )
@@ -103,14 +107,14 @@ fun CardListScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Box:", color = Color(0xFFA5B4FC), fontSize = 14.sp)
+                Text("Box:", color = colors.textSecondary, fontSize = 14.sp)
                 InputChip(
                     selected = selectedBox == null,
                     onClick = { viewModel.onBoxFilterChanged(null) },
-                    label = { Text("ALL", color = Color.White) },
+                    label = { Text("ALL", color = if (selectedBox == null) Color.White else colors.textPrimary) },
                     colors = InputChipDefaults.inputChipColors(
-                        selectedContainerColor = Color(0xFF10B981),
-                        containerColor = Color(0xFF1B1E36)
+                        selectedContainerColor = colors.accent,
+                        containerColor = colors.borderColor.copy(alpha = 0.2f)
                     ),
                     border = null
                 )
@@ -118,10 +122,10 @@ fun CardListScreen(
                     InputChip(
                         selected = selectedBox == boxNum,
                         onClick = { viewModel.onBoxFilterChanged(boxNum) },
-                        label = { Text("$boxNum", color = Color.White) },
+                        label = { Text("$boxNum", color = if (selectedBox == boxNum) Color.White else colors.textPrimary) },
                         colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = Color(0xFF10B981),
-                            containerColor = Color(0xFF1B1E36)
+                            selectedContainerColor = colors.accent,
+                            containerColor = colors.borderColor.copy(alpha = 0.2f)
                         ),
                         border = null
                     )
@@ -138,7 +142,7 @@ fun CardListScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1E36))
+                        colors = CardDefaults.cardColors(containerColor = colors.cardBackground)
                     ) {
                         Row(
                             modifier = Modifier
@@ -156,24 +160,32 @@ fun CardListScreen(
                                         text = card.front,
                                         fontSize = 18.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.White
+                                        color = colors.textPrimary
                                     )
                                     Text(
                                         text = "(${card.language})",
                                         fontSize = 12.sp,
-                                        color = Color(0xFFA5B4FC)
+                                        color = colors.textSecondary
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = card.back,
                                     fontSize = 16.sp,
-                                    color = Color(0xFF10B981)
+                                    color = colors.accent
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    BoxBadge(text = card.cardType, color = Color(0xFF2C3258))
-                                    BoxBadge(text = "Box ${card.box}", color = Color(0xFF1B2E24))
+                                    BoxBadge(
+                                        text = card.cardType,
+                                        containerColor = colors.primary.copy(alpha = 0.15f),
+                                        textColor = colors.primary
+                                    )
+                                    BoxBadge(
+                                        text = "Box ${card.box}",
+                                        containerColor = colors.accent.copy(alpha = 0.15f),
+                                        textColor = colors.accent
+                                    )
                                 }
                             }
 
@@ -191,15 +203,15 @@ fun CardListScreen(
 }
 
 @Composable
-fun BoxBadge(text: String, color: Color) {
+fun BoxBadge(text: String, containerColor: Color, textColor: Color) {
     Surface(
-        color = color,
+        color = containerColor,
         shape = RoundedCornerShape(4.dp),
         modifier = Modifier.padding(end = 4.dp)
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = textColor,
             fontSize = 11.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)

@@ -4,9 +4,27 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,10 +48,12 @@ fun ReviewScreen(
     val isFinished by viewModel.isFinished.collectAsState()
     val currentCard by viewModel.currentCard.collectAsState()
 
+    val colors = LocalAppColors.current
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F111A))
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -50,13 +70,13 @@ fun ReviewScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 TextButton(onClick = onBack) {
-                    Text("Quit", color = Color(0xFFA5B4FC), fontSize = 16.sp)
+                    Text("Quit", color = colors.textSecondary, fontSize = 16.sp)
                 }
                 Text(
                     text = "Review",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = colors.textPrimary
                 )
                 Spacer(modifier = Modifier.width(48.dp))
             }
@@ -72,7 +92,7 @@ fun ReviewScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(16.dp),
                         shape = RoundedCornerShape(24.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1E36))
+                        colors = CardDefaults.cardColors(containerColor = colors.cardBackground)
                     ) {
                         Column(
                             modifier = Modifier.padding(32.dp),
@@ -87,22 +107,29 @@ fun ReviewScreen(
                                 text = "All Caught Up!",
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = colors.textPrimary
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "You have reviewed all due cards for now.",
                                 fontSize = 16.sp,
-                                color = Color(0xFFA5B4FC)
+                                color = colors.textSecondary
                             )
                             Spacer(modifier = Modifier.height(24.dp))
                             Button(
                                 onClick = onBack,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C4DFF)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colors.primary,
+                                    contentColor = Color.White
+                                ),
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.fillMaxWidth().height(48.dp)
                             ) {
-                                Text("Back to Dashboard", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                Text(
+                                    "Back to Dashboard",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
@@ -113,8 +140,8 @@ fun ReviewScreen(
 
                 LinearProgressIndicator(
                     progress = { progress },
-                    color = Color(0xFF7C4DFF),
-                    trackColor = Color(0xFF2C3258),
+                    color = colors.primary,
+                    trackColor = colors.borderColor.copy(alpha = 0.5f),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp)
@@ -126,7 +153,7 @@ fun ReviewScreen(
                 Text(
                     text = "Card ${currentIndex + 1} of ${cards.size}",
                     fontSize = 14.sp,
-                    color = Color(0xFFA5B4FC)
+                    color = colors.textSecondary
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -137,7 +164,7 @@ fun ReviewScreen(
                         .weight(1f)
                         .padding(vertical = 10.dp),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1B1E36))
+                    colors = CardDefaults.cardColors(containerColor = colors.cardBackground)
                 ) {
                     Column(
                         modifier = Modifier
@@ -153,17 +180,17 @@ fun ReviewScreen(
                             SuggestionChip(
                                 onClick = {},
                                 label = { Text(card.language, color = Color.White) },
-                                colors = SuggestionChipDefaults.suggestionChipColors(containerColor = Color(0xFF7C4DFF))
+                                colors = SuggestionChipDefaults.suggestionChipColors(containerColor = colors.primary)
                             )
                             SuggestionChip(
                                 onClick = {},
                                 label = { Text(card.cardType, color = Color.White) },
-                                colors = SuggestionChipDefaults.suggestionChipColors(containerColor = Color(0xFF10B981))
+                                colors = SuggestionChipDefaults.suggestionChipColors(containerColor = colors.accent)
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
                                 text = "Box ${card.box}",
-                                color = Color(0xFFA5B4FC),
+                                color = colors.textSecondary,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.align(Alignment.CenterVertically)
@@ -179,7 +206,7 @@ fun ReviewScreen(
                                 text = card.front,
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = colors.textPrimary
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))
@@ -193,7 +220,7 @@ fun ReviewScreen(
                                     text = card.back,
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Medium,
-                                    color = Color(0xFF10B981)
+                                    color = colors.accent
                                 )
                             }
                         }
@@ -201,11 +228,18 @@ fun ReviewScreen(
                         if (!isAnswerVisible) {
                             Button(
                                 onClick = { viewModel.revealAnswer() },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C4DFF)),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = colors.primary,
+                                    contentColor = Color.White
+                                ),
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.fillMaxWidth().height(48.dp)
                             ) {
-                                Text("Reveal Answer", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                Text(
+                                    "Reveal Answer",
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         } else {
                             Row(
@@ -213,16 +247,36 @@ fun ReviewScreen(
                                 horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 Button(
-                                    onClick = { viewModel.submitReview(isCorrect = false, currentTimeEpochMs = getCurrentTimeEpochMs()) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444)),
+                                    onClick = {
+                                        viewModel.submitReview(
+                                            isCorrect = false,
+                                            currentTimeEpochMs = getCurrentTimeEpochMs()
+                                        )
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color(0xFFEF4444),
+                                        contentColor = Color.White
+                                    ),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.weight(1f).height(48.dp)
                                 ) {
-                                    Text("Incorrect", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                                    Text(
+                                        "Incorrect",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
                                 Button(
-                                    onClick = { viewModel.submitReview(isCorrect = true, currentTimeEpochMs = getCurrentTimeEpochMs()) },
-                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10B981)),
+                                    onClick = {
+                                        viewModel.submitReview(
+                                            isCorrect = true,
+                                            currentTimeEpochMs = getCurrentTimeEpochMs()
+                                        )
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = colors.accent,
+                                        contentColor = Color.White
+                                    ),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.weight(1f).height(48.dp)
                                 ) {

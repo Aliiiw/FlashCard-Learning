@@ -61,8 +61,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-            implementation(libs.sqldelight.sqlite)
             implementation(libs.kotlinx.coroutines.test)
+        }
+        val androidHostTest by getting {
+            dependencies {
+                implementation(libs.sqldelight.sqlite)
+            }
         }
     }
 }

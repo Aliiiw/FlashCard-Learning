@@ -48,7 +48,7 @@ fun DashboardScreen(
             onDismissRequest = { showThemeDialog = false },
             title = {
                 Text(
-                    "Select Theme / پوسته",
+                    "Select Theme",
                     color = colors.textPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -56,7 +56,7 @@ fun DashboardScreen(
             },
             text = {
                 Column(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                    Text("Theme Mode / حالت پوسته:", color = colors.textSecondary, fontSize = 14.sp)
+                    Text("Theme Mode:", color = colors.textSecondary, fontSize = 14.sp)
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -70,6 +70,7 @@ fun DashboardScreen(
                                     contentColor = if (themeMode == mode) Color.White else colors.textPrimary
                                 ),
                                 shape = RoundedCornerShape(8.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp),
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(mode.name, fontSize = 12.sp)
@@ -79,7 +80,7 @@ fun DashboardScreen(
 
                     if (themeMode == ThemeMode.Custom) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Custom Color / رنگ دلخواه:", color = colors.textSecondary, fontSize = 14.sp)
+                        Text("Custom Color:", color = colors.textSecondary, fontSize = 14.sp)
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -104,13 +105,19 @@ fun DashboardScreen(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        TextButton(onClick = { showThemeDialog = false }) {
+                            Text("OK", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
                 }
             },
-            confirmButton = {
-                TextButton(onClick = { showThemeDialog = false }) {
-                    Text("OK / تأیید", color = colors.primary)
-                }
-            },
+            confirmButton = {},
             containerColor = colors.surface
         )
     }

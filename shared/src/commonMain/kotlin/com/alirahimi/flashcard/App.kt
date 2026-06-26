@@ -1,48 +1,69 @@
 package com.alirahimi.flashcard
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.painterResource
+import com.alirahimi.flashcard.presentation.AddCardViewModel
+import com.alirahimi.flashcard.presentation.CardListViewModel
+import com.alirahimi.flashcard.presentation.ReviewViewModel
+import com.alirahimi.flashcard.ui.AddCardScreen
+import com.alirahimi.flashcard.ui.CardListScreen
+import com.alirahimi.flashcard.ui.DashboardScreen
+import com.alirahimi.flashcard.ui.ReviewScreen
+import org.koin.compose.koinInject
 
-import flashcardlearning.shared.generated.resources.Res
-import flashcardlearning.shared.generated.resources.compose_multiplatform
+enum class Screen {
+    Dashboard,
+    AddCard,
+    Review,
+    CardList
+}
 
 @Composable
-@Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+        var currentScreen by remember { mutableStateOf(Screen.Dashboard) }
+
+        val addCardViewModel = koinInject<AddCardViewModel>()
+        val reviewViewModel = koinInject<ReviewViewModel>()
+        val cardListViewModel = koinInject<CardListViewModel>()
+
+        val cards by cardListViewModel.cards.collectAsState()
+        val dueCards by reviewViewModel.cardsToReview.collectAsState()
+
+        LaunchedEffect(currentScreen) {
+            if (currentScreen == Screen.Dashboard) {
+                cardListViewModel.loadCards()
+                reviewViewModel.loadCards(getCurrentTimeEpochMs())
             }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+        }
+
+        when (currentScreen) {
+            Screen.Dashboard -> {
+                DashboardScreen(
+                    cards = cards,
+                    dueCardsCount = dueCards.size,
+                    onStartReview = { currentScreen = Screen.Review },
+                    onNavigateToAddCard = { currentScreen = Screen.AddCard },
+                    onNavigateToCardList = { currentScreen = Screen.CardList }
+                )
+            }
+            Screen.AddCard -> {
+                AddCardScreen(
+                    viewModel = addCardViewModel,
+                    onBack = { currentScreen = Screen.Dashboard }
+                )
+            }
+            Screen.Review -> {
+                ReviewScreen(
+                    viewModel = reviewViewModel,
+                    onBack = { currentScreen = Screen.Dashboard }
+                )
+            }
+            Screen.CardList -> {
+                CardListScreen(
+                    viewModel = cardListViewModel,
+                    onBack = { currentScreen = Screen.Dashboard }
+                )
             }
         }
     }

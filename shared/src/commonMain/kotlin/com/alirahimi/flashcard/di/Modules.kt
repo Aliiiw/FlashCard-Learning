@@ -7,6 +7,9 @@ import com.alirahimi.flashcard.domain.usecase.AddCardUseCase
 import com.alirahimi.flashcard.domain.usecase.GetAllCardsUseCase
 import com.alirahimi.flashcard.domain.usecase.GetCardsForReviewUseCase
 import com.alirahimi.flashcard.domain.usecase.ReviewCardUseCase
+import com.alirahimi.flashcard.presentation.AddCardViewModel
+import com.alirahimi.flashcard.presentation.CardListViewModel
+import com.alirahimi.flashcard.presentation.ReviewViewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -23,4 +26,7 @@ val commonModule = module {
     factory { ReviewCardUseCase(get()) }
     factory { GetCardsForReviewUseCase(get()) }
     factory { GetAllCardsUseCase(get()) }
+    factory { AddCardViewModel(get()) }
+    factory { ReviewViewModel(get(), get()) }
+    factory { CardListViewModel(get(), get()) }
 }

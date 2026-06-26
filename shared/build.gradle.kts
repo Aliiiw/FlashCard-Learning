@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -37,6 +39,8 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.sqldelight.android)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -47,9 +51,26 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.sqldelight.runtime)
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.native)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.sqldelight.sqlite)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("FlashCardDatabase") {
+            packageName.set("com.alirahimi.flashcard.db")
         }
     }
 }

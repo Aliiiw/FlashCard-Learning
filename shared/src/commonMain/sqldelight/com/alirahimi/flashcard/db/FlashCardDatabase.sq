@@ -1,0 +1,34 @@
+CREATE TABLE cardEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    front TEXT NOT NULL,
+    back TEXT NOT NULL,
+    language TEXT NOT NULL,
+    box INTEGER NOT NULL,
+    nextReviewTimeEpochMs INTEGER NOT NULL,
+    createdAtEpochMs INTEGER NOT NULL,
+    cardType TEXT NOT NULL
+);
+
+selectAllCards:
+SELECT * FROM cardEntity;
+
+selectCardsForReview:
+SELECT * FROM cardEntity
+WHERE nextReviewTimeEpochMs <= :currentTime;
+
+selectCardById:
+SELECT * FROM cardEntity
+WHERE id = :id;
+
+insertCard:
+INSERT INTO cardEntity (front, back, language, box, nextReviewTimeEpochMs, createdAtEpochMs, cardType)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+updateCardReview:
+UPDATE cardEntity
+SET box = :box, nextReviewTimeEpochMs = :nextReviewTimeEpochMs
+WHERE id = :id;
+
+deleteCard:
+DELETE FROM cardEntity
+WHERE id = :id;

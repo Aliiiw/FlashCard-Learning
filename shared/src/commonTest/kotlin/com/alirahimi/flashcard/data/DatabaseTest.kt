@@ -14,6 +14,7 @@ class DatabaseTest {
     fun setUp() {
         val driver = createTestSqlDriver()
         database = FlashCardDatabase(driver)
+        database.flashCardDatabaseQueries.clearDatabase()
     }
 
     @Test

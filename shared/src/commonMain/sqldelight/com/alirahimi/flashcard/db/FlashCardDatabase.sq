@@ -32,3 +32,6 @@ WHERE id = :id;
 deleteCard:
 DELETE FROM cardEntity
 WHERE id = :id;
+
+clearDatabase:
+DELETE FROM cardEntity;

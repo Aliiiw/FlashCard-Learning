@@ -1,5 +1,7 @@
 package com.alirahimi.flashcard.di
 
-fun initKoinIos() {
-    initKoin {}
+object IosKoin {
+    fun initKoinIos() {
+        initKoin {}
+    }
 }

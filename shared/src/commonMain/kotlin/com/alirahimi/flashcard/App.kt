@@ -5,10 +5,12 @@ import androidx.compose.runtime.*
 import com.alirahimi.flashcard.presentation.AddCardViewModel
 import com.alirahimi.flashcard.presentation.CardListViewModel
 import com.alirahimi.flashcard.presentation.ReviewViewModel
+import com.alirahimi.flashcard.presentation.ImportViewModel
 import com.alirahimi.flashcard.ui.AddCardScreen
 import com.alirahimi.flashcard.ui.CardListScreen
 import com.alirahimi.flashcard.ui.DashboardScreen
 import com.alirahimi.flashcard.ui.ReviewScreen
+import com.alirahimi.flashcard.ui.ImportScreen
 import org.koin.compose.koinInject
 
 import com.alirahimi.flashcard.ui.*
@@ -17,7 +19,8 @@ enum class Screen {
     Dashboard,
     AddCard,
     Review,
-    CardList
+    CardList,
+    Import
 }
 
 @Composable
@@ -38,6 +41,7 @@ fun App() {
             val addCardViewModel = koinInject<AddCardViewModel>()
             val reviewViewModel = koinInject<ReviewViewModel>()
             val cardListViewModel = koinInject<CardListViewModel>()
+            val importViewModel = koinInject<ImportViewModel>()
 
             val cards by cardListViewModel.cards.collectAsState()
             val dueCards by reviewViewModel.cardsToReview.collectAsState()
@@ -60,7 +64,8 @@ fun App() {
                         onCustomColorChanged = { selectedCustomPresetColor = it },
                         onStartReview = { currentScreen = Screen.Review },
                         onNavigateToAddCard = { currentScreen = Screen.AddCard },
-                        onNavigateToCardList = { currentScreen = Screen.CardList }
+                        onNavigateToCardList = { currentScreen = Screen.CardList },
+                        onNavigateToImport = { currentScreen = Screen.Import }
                     )
                 }
                 Screen.AddCard -> {
@@ -78,6 +83,12 @@ fun App() {
                 Screen.CardList -> {
                     CardListScreen(
                         viewModel = cardListViewModel,
+                        onBack = { currentScreen = Screen.Dashboard }
+                    )
+                }
+                Screen.Import -> {
+                    ImportScreen(
+                        viewModel = importViewModel,
                         onBack = { currentScreen = Screen.Dashboard }
                     )
                 }

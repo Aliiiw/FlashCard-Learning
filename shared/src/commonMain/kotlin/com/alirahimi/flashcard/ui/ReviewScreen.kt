@@ -25,9 +25,7 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -136,6 +134,12 @@ fun ReviewScreen(
                 }
             } else {
                 val card = currentCard!!
+                var displayedAnswer by remember { mutableStateOf("") }
+                LaunchedEffect(isAnswerVisible, card.back) {
+                    if (isAnswerVisible) {
+                        displayedAnswer = card.back
+                    }
+                }
                 val progress = (currentIndex + 1).toFloat() / cards.size
 
                 LinearProgressIndicator(
@@ -217,7 +221,7 @@ fun ReviewScreen(
                                 exit = fadeOut()
                             ) {
                                 Text(
-                                    text = card.back,
+                                    text = displayedAnswer,
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = colors.accent

@@ -2,12 +2,36 @@ package com.alirahimi.flashcard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -16,11 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.alirahimi.flashcard.domain.model.FlashCard
-
-import androidx.compose.runtime.*
-import com.alirahimi.flashcard.ui.ThemeMode
-import com.alirahimi.flashcard.ui.CustomThemePresets
-import com.alirahimi.flashcard.ui.LocalAppColors
 
 @Composable
 fun DashboardScreen(
@@ -32,7 +51,8 @@ fun DashboardScreen(
     onCustomColorChanged: (Color) -> Unit,
     onStartReview: () -> Unit,
     onNavigateToAddCard: () -> Unit,
-    onNavigateToCardList: () -> Unit
+    onNavigateToCardList: () -> Unit,
+    onNavigateToImport: () -> Unit
 ) {
     val box1 = cards.count { it.box == 1 }
     val box2 = cards.count { it.box == 2 }
@@ -62,11 +82,13 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        ThemeMode.values().forEach { mode ->
+                        ThemeMode.entries.forEach { mode ->
                             Button(
                                 onClick = { onThemeModeChanged(mode) },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (themeMode == mode) colors.primary else colors.borderColor.copy(alpha = 0.2f),
+                                    containerColor = if (themeMode == mode) colors.primary else colors.borderColor.copy(
+                                        alpha = 0.2f
+                                    ),
                                     contentColor = if (themeMode == mode) Color.White else colors.textPrimary
                                 ),
                                 shape = RoundedCornerShape(8.dp),
@@ -98,7 +120,10 @@ fun DashboardScreen(
                                         Box(
                                             modifier = Modifier
                                                 .fillMaxSize()
-                                                .background(Color.White.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
+                                                .background(
+                                                    Color.White.copy(alpha = 0.4f),
+                                                    shape = RoundedCornerShape(16.dp)
+                                                )
                                         )
                                     }
                                 }
@@ -112,7 +137,12 @@ fun DashboardScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         TextButton(onClick = { showThemeDialog = false }) {
-                            Text("OK", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                "OK",
+                                color = colors.primary,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
@@ -134,19 +164,32 @@ fun DashboardScreen(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Leitner Box",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.textPrimary
+            )
             Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Leitner Box",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.textPrimary
-                )
                 TextButton(onClick = { showThemeDialog = true }) {
-                    Text("🎨 Theme", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        "🎨 Theme",
+                        color = colors.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                TextButton(onClick = onNavigateToImport) {
+                    Text(
+                        "📥 Import",
+                        color = colors.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
 
@@ -209,7 +252,12 @@ fun DashboardScreen(
                             title = "Box 1",
                             count = box1,
                             subtitle = "Every 1 Day",
-                            gradient = Brush.linearGradient(listOf(Color(0xFFEF4444), Color(0xFFF87171)))
+                            gradient = Brush.linearGradient(
+                                listOf(
+                                    Color(0xFFEF4444),
+                                    Color(0xFFF87171)
+                                )
+                            )
                         )
                     }
                     item {
@@ -217,7 +265,12 @@ fun DashboardScreen(
                             title = "Box 2",
                             count = box2,
                             subtitle = "Every 2 Days",
-                            gradient = Brush.linearGradient(listOf(Color(0xFFF59E0B), Color(0xFFFBBF24)))
+                            gradient = Brush.linearGradient(
+                                listOf(
+                                    Color(0xFFF59E0B),
+                                    Color(0xFFFBBF24)
+                                )
+                            )
                         )
                     }
                     item {
@@ -225,7 +278,12 @@ fun DashboardScreen(
                             title = "Box 3",
                             count = box3,
                             subtitle = "Every 4 Days",
-                            gradient = Brush.linearGradient(listOf(Color(0xFF10B981), Color(0xFF34D399)))
+                            gradient = Brush.linearGradient(
+                                listOf(
+                                    Color(0xFF10B981),
+                                    Color(0xFF34D399)
+                                )
+                            )
                         )
                     }
                     item {
@@ -233,7 +291,12 @@ fun DashboardScreen(
                             title = "Box 4",
                             count = box4,
                             subtitle = "Every 8 Days",
-                            gradient = Brush.linearGradient(listOf(Color(0xFF3B82F6), Color(0xFF60A5FA)))
+                            gradient = Brush.linearGradient(
+                                listOf(
+                                    Color(0xFF3B82F6),
+                                    Color(0xFF60A5FA)
+                                )
+                            )
                         )
                     }
                     item {
@@ -241,7 +304,12 @@ fun DashboardScreen(
                             title = "Box 5",
                             count = box5,
                             subtitle = "Every 16 Days",
-                            gradient = Brush.linearGradient(listOf(Color(0xFF6366F1), Color(0xFF818CF8)))
+                            gradient = Brush.linearGradient(
+                                listOf(
+                                    Color(0xFF6366F1),
+                                    Color(0xFF818CF8)
+                                )
+                            )
                         )
                     }
                 }
@@ -269,7 +337,12 @@ fun DashboardScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = colors.cardBackground),
                     modifier = Modifier.weight(1f).height(48.dp)
                 ) {
-                    Text(text = "Word List", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = colors.textPrimary)
+                    Text(
+                        text = "Word List",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.textPrimary
+                    )
                 }
             }
         }

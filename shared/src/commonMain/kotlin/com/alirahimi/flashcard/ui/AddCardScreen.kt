@@ -49,6 +49,7 @@ fun AddCardScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.background)
+            .clearFocusOnTap()
     ) {
         Column(
             modifier = Modifier
@@ -150,39 +151,23 @@ fun AddCardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            OutlinedTextField(
+            val wordLanguageCode = if (language == "EN") "en" else "fr"
+
+            LanguageOutlinedTextField(
                 value = word,
                 onValueChange = { viewModel.onWordChanged(it) },
-                label = { Text("Word / Phrase", color = colors.textSecondary) },
-                textStyle = LocalTextStyle.current.copy(color = colors.textPrimary),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    hintLocales = LocaleList(wordLocale)
-                ),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = colors.primary,
-                    unfocusedBorderColor = colors.borderColor,
-                    cursorColor = colors.primary
-                ),
-                shape = RoundedCornerShape(12.dp),
+                label = "Word / Phrase",
+                languageCode = wordLanguageCode,
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            LanguageOutlinedTextField(
                 value = translation,
                 onValueChange = { viewModel.onTranslationChanged(it) },
-                label = { Text("Farsi Translation", color = colors.textSecondary) },
-                textStyle = LocalTextStyle.current.copy(color = colors.textPrimary),
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    hintLocales = LocaleList(Locale("fa"))
-                ),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = colors.primary,
-                    unfocusedBorderColor = colors.borderColor,
-                    cursorColor = colors.primary
-                ),
-                shape = RoundedCornerShape(12.dp),
+                label = "Farsi Translation",
+                languageCode = "fa",
                 modifier = Modifier.fillMaxWidth()
             )
 

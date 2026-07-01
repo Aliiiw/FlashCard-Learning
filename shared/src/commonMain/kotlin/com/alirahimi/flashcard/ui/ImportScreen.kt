@@ -33,7 +33,6 @@ fun ImportScreen(
     val colors = LocalAppColors.current
     val scrollState = rememberScrollState()
 
-    // Setup file picker trigger
     val filePicker = rememberFilePicker { content ->
         viewModel.onInputTextChanged(content)
     }
@@ -52,7 +51,6 @@ fun ImportScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,7 +72,6 @@ fun ImportScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Select Language
             Text(
                 text = "Select Target Language",
                 color = colors.textSecondary,
@@ -115,7 +112,6 @@ fun ImportScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Select Card Type
             Text(
                 text = "Select Card Type",
                 color = colors.textSecondary,
@@ -156,7 +152,6 @@ fun ImportScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Import Result Banner
             when (val result = importResult) {
                 is ImportResult.Success -> {
                     Card(
@@ -222,7 +217,6 @@ fun ImportScreen(
                 ImportResult.Idle -> {}
             }
 
-            // Input / Paste Area
             Text(
                 text = "Paste text (format: word -> translation)",
                 color = colors.textSecondary,
@@ -255,12 +249,10 @@ fun ImportScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Select File Button
                 Button(
                     onClick = filePicker,
                     colors = ButtonDefaults.buttonColors(containerColor = colors.cardBackground),
@@ -274,7 +266,6 @@ fun ImportScreen(
                     )
                 }
 
-                // Import Button
                 Button(
                     onClick = {
                         viewModel.importWords(inputText, getCurrentTimeEpochMs())

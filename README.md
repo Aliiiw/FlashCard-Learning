@@ -8,6 +8,8 @@ An offline-first, modern Leitner Box spaced repetition flashcard application bui
 
 - **Leitner Spaced Repetition**: 5 progressive boxes with exponential delay intervals (1 day, 2 days, 4 days, 8 days, 16 days). Correct answers move cards forward, while incorrect answers reset them to Box 1.
 - **Dynamic Keyboard Language Auto-Switching**: When adding cards, the device keyboard automatically switches to English/French when focusing on the vocabulary input, and to Persian when focusing on the translation field.
+- **Bulk Word Import**: Import lists of flashcards in bulk. Users can copy-paste text (supporting separators like `->`, ` - `, `:`, and `=`) or pick `.txt` files directly using native file pickers on Android and iOS. Duplicates are automatically detected and skipped.
+- **Improved UX & Polish**: Dismiss the keyboard automatically by tapping anywhere on the screen background. Review sessions feature smooth card transition animations without transition-flashing bugs.
 - **Adaptive UI**: The dashboard, lists, and forms scale fluidly to provide a native, responsive experience on both phones and tablets.
 - **Offline-First & Local Persistence**: Data is persisted locally using **SQLDelight** on SQLite, requiring zero internet connection or remote servers.
 - **Clean Architecture & SOLID**: Strict separation of concerns (Domain, Data, Presentation, and UI layers) designed for robustness and testability.
@@ -117,6 +119,8 @@ The project was developed under strict Test-Driven Development. Unit and integra
 
 - **تکرار فاصله‌دار لایتنر**: دارای ۵ جعبه پیش‌رونده با فواصل زمانی نمایی (۱ روز، ۲ روز، ۴ روز، ۸ روز، ۱۶ روز). پاسخ‌های صحیح کارت‌ها را به جعبه بعدی هدایت می‌کنند و پاسخ‌های نادرست آن‌ها را به جعبه ۱ باز می‌گردانند.
 - **تغییر خودکار زبان کیبورد**: هنگام وارد کردن کلمات، کیبورد به محض تمرکز روی فیلد کلمه به انگلیسی/فرانسوی و به محض تمرکز روی فیلد معنی به فارسی تغییر زبان می‌دهد.
+- **ایمپورت گروهی لغات (Bulk Word Import)**: امکان وارد کردن انبوه فلش‌کارت‌ها. کاربران می‌توانند لیست کلمات را مستقیماً کپی و پیست کرده (با جداکننده‌های مختلف مانند `->` یا ` - ` یا `:` یا `=`) یا فایل متنی `.txt` را از طریق انتخابگر نیتیو فایل در اندروید و iOS انتخاب کنند. کلمات تکراری در زبان هدف به طور خودکار شناسایی و نادیده گرفته می‌شوند.
+- **بهبود تجربه کاربری و پولیش رابط کاربری**: قابلیت بستن خودکار کیبورد با لمس هر نقطه خالی از صفحه (Clear Focus on Tap) و انیمیشن انتقال نرم بین کارت‌ها در جلسات مرور بدون مشکل فلاش زدن موقت پاسخ کارت بعدی.
 - **رابط کاربری تطبیق‌پذیر (Adaptive)**: داشبورد، لیست‌ها و فرم‌ها به صورت کاملاً ریسپانسیو و متناسب با ابعاد گوشی و تبلت مقیاس‌دهی می‌شوند.
 - **کاملا آفلاین (Offline-First)**: داده‌ها به صورت محلی با استفاده از **SQLDelight** بر روی دیتابیس SQLite ذخیره می‌شوند و نیاز به اتصال اینترنت یا سرور ندارند.
 - **معماری تمیز و اصول SOLID**: تفکیک کامل مسئولیت‌ها در لایه‌های Domain، Data، Presentation و UI برای افزایش پایداری و تست‌پذیری برنامه.

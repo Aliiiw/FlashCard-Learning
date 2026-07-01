@@ -32,7 +32,8 @@ fun DashboardScreen(
     onCustomColorChanged: (Color) -> Unit,
     onStartReview: () -> Unit,
     onNavigateToAddCard: () -> Unit,
-    onNavigateToCardList: () -> Unit
+    onNavigateToCardList: () -> Unit,
+    onNavigateToImport: () -> Unit
 ) {
     val box1 = cards.count { it.box == 1 }
     val box2 = cards.count { it.box == 2 }
@@ -145,8 +146,13 @@ fun DashboardScreen(
                     fontWeight = FontWeight.Bold,
                     color = colors.textPrimary
                 )
-                TextButton(onClick = { showThemeDialog = true }) {
-                    Text("🎨 Theme", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(onClick = { showThemeDialog = true }) {
+                        Text("🎨 Theme", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                    TextButton(onClick = onNavigateToImport) {
+                        Text("📥 Import", color = colors.primary, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    }
                 }
             }
 

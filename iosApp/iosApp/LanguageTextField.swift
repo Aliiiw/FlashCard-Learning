@@ -31,7 +31,7 @@ class LanguageTextField: UITextField {
     }
 }
 
-public func setupLanguageTextFieldFactory() {
+func setupLanguageTextFieldFactory() {
     LanguageOutlinedTextField_iosKt.createLanguageTextField = { languageCode in
         let tf = LanguageTextField()
         tf.languageCode = languageCode

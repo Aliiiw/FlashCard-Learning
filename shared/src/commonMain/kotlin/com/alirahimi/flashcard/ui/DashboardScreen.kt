@@ -82,7 +82,7 @@ fun DashboardScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        ThemeMode.values().forEach { mode ->
+                        ThemeMode.entries.forEach { mode ->
                             Button(
                                 onClick = { onThemeModeChanged(mode) },
                                 colors = ButtonDefaults.buttonColors(
@@ -164,34 +164,32 @@ fun DashboardScreen(
                 .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Leitner Box",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.textPrimary
+            )
             Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "Leitner Box",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = colors.textPrimary
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TextButton(onClick = { showThemeDialog = true }) {
-                        Text(
-                            "🎨 Theme",
-                            color = colors.primary,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                    TextButton(onClick = onNavigateToImport) {
-                        Text(
-                            "📥 Import",
-                            color = colors.primary,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                TextButton(onClick = { showThemeDialog = true }) {
+                    Text(
+                        "🎨 Theme",
+                        color = colors.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                TextButton(onClick = onNavigateToImport) {
+                    Text(
+                        "📥 Import",
+                        color = colors.primary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             }
 

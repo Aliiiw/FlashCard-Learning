@@ -14,6 +14,13 @@ An offline-first, modern Leitner Box spaced repetition flashcard application bui
 - **Offline-First & Local Persistence**: Data is persisted locally using **SQLDelight** on SQLite, requiring zero internet connection or remote servers.
 - **Clean Architecture & SOLID**: Strict separation of concerns (Domain, Data, Presentation, and UI layers) designed for robustness and testability.
 
+## Screenshots
+
+<p align="center">
+  <img src="image/dashboard.png" width="350" alt="Dashboard Screenshot" />
+  <img src="image/add_list.png" width="350" alt="Add Card and Word List" />
+</p>
+
 ---
 
 ## Architecture & Design Patterns
@@ -124,6 +131,13 @@ The project was developed under strict Test-Driven Development. Unit and integra
 - **رابط کاربری تطبیق‌پذیر (Adaptive)**: داشبورد، لیست‌ها و فرم‌ها به صورت کاملاً ریسپانسیو و متناسب با ابعاد گوشی و تبلت مقیاس‌دهی می‌شوند.
 - **کاملا آفلاین (Offline-First)**: داده‌ها به صورت محلی با استفاده از **SQLDelight** بر روی دیتابیس SQLite ذخیره می‌شوند و نیاز به اتصال اینترنت یا سرور ندارند.
 - **معماری تمیز و اصول SOLID**: تفکیک کامل مسئولیت‌ها در لایه‌های Domain، Data، Presentation و UI برای افزایش پایداری و تست‌پذیری برنامه.
+
+## تصاویر برنامه
+
+<p align="center">
+  <img src="image/dashboard.png" width="350" alt="داشبورد برنامه" />
+  <img src="image/add_list.png" width="350" alt="افزودن کارت و لیست لغات" />
+</p>
 
 ---
 

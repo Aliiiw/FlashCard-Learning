@@ -1,0 +1,16 @@
+<resources>
+    <string name="error_disk_full">Storage is full. Free up space and try again.</string>
+    <string name="error_not_found">The requested item could not be found.</string>
+    <string name="error_no_internet">No internet connection. Please check your network.</string>
+    <string name="error_server">Server error occurred. Please try again later.</string>
+    <string name="error_unauthorized">You are not authorized to perform this action.</string>
+    <string name="error_unknown">An unexpected error occurred.</string>
+    <string name="error_empty_front">Please enter a word or phrase.</string>
+    <string name="error_empty_back">Please enter a translation.</string>
+    <string name="error_import_empty">Please paste text or select a file to import.</string>
+    <string name="error_import_no_valid_lines">No valid word pairs were found. Use format: word -> translation.</string>
+    <string name="cd_delete_card">Delete flashcard</string>
+    <string name="cd_theme_settings">Open theme settings</string>
+    <string name="cd_import_cards">Open bulk word import</string>
+    <string name="cd_select_custom_color">Select custom theme color %1$s</string>
+</resources>

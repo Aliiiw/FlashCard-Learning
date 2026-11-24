@@ -1,98 +1,50 @@
 package com.alirahimi.flashcard
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import com.alirahimi.flashcard.presentation.AddCardViewModel
-import com.alirahimi.flashcard.presentation.CardListViewModel
-import com.alirahimi.flashcard.presentation.ReviewViewModel
-import com.alirahimi.flashcard.presentation.ImportViewModel
-import com.alirahimi.flashcard.ui.AddCardScreen
-import com.alirahimi.flashcard.ui.CardListScreen
-import com.alirahimi.flashcard.ui.DashboardScreen
-import com.alirahimi.flashcard.ui.ReviewScreen
-import com.alirahimi.flashcard.ui.ImportScreen
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.alirahimi.flashcard.core.designsystem.theme.AppTheme
+import com.alirahimi.flashcard.core.designsystem.theme.ThemeController
+import com.alirahimi.flashcard.feature.cards.presentation.navigation.AddCardRoute
+import com.alirahimi.flashcard.feature.cards.presentation.navigation.CardListRoute
+import com.alirahimi.flashcard.feature.cards.presentation.navigation.cardsGraph
+import com.alirahimi.flashcard.feature.dashboard.presentation.navigation.DashboardRoute
+import com.alirahimi.flashcard.feature.dashboard.presentation.navigation.dashboardGraph
+import com.alirahimi.flashcard.feature.importcards.presentation.navigation.ImportRoute
+import com.alirahimi.flashcard.feature.importcards.presentation.navigation.importGraph
+import com.alirahimi.flashcard.feature.review.presentation.navigation.ReviewRoute
+import com.alirahimi.flashcard.feature.review.presentation.navigation.reviewGraph
 import org.koin.compose.koinInject
-
-import com.alirahimi.flashcard.ui.*
-
-enum class Screen {
-    Dashboard,
-    AddCard,
-    Review,
-    CardList,
-    Import
-}
 
 @Composable
 fun App() {
-    var currentThemeMode by remember { mutableStateOf(ThemeMode.Dark) }
-    var selectedCustomPresetColor by remember { mutableStateOf(CustomThemePresets[0].color) }
+    val themeController = koinInject<ThemeController>()
+    val themeConfig by themeController.themeConfig.collectAsStateWithLifecycle()
 
-    val appColors = when (currentThemeMode) {
-        ThemeMode.Dark -> DarkColors
-        ThemeMode.Light -> LightColors
-        ThemeMode.Custom -> getCustomColors(selectedCustomPresetColor)
-    }
+    AppTheme(themeConfig = themeConfig) {
+        val navController = rememberNavController()
 
-    CompositionLocalProvider(LocalAppColors provides appColors) {
-        MaterialTheme {
-            var currentScreen by remember { mutableStateOf(Screen.Dashboard) }
-
-            val addCardViewModel = koinInject<AddCardViewModel>()
-            val reviewViewModel = koinInject<ReviewViewModel>()
-            val cardListViewModel = koinInject<CardListViewModel>()
-            val importViewModel = koinInject<ImportViewModel>()
-
-            val cards by cardListViewModel.cards.collectAsState()
-            val dueCards by reviewViewModel.cardsToReview.collectAsState()
-
-            LaunchedEffect(currentScreen) {
-                if (currentScreen == Screen.Dashboard) {
-                    cardListViewModel.loadCards()
-                    reviewViewModel.loadCards(getCurrentTimeEpochMs())
-                }
-            }
-
-            when (currentScreen) {
-                Screen.Dashboard -> {
-                    DashboardScreen(
-                        cards = cards,
-                        dueCardsCount = dueCards.size,
-                        themeMode = currentThemeMode,
-                        customPresetColor = selectedCustomPresetColor,
-                        onThemeModeChanged = { currentThemeMode = it },
-                        onCustomColorChanged = { selectedCustomPresetColor = it },
-                        onStartReview = { currentScreen = Screen.Review },
-                        onNavigateToAddCard = { currentScreen = Screen.AddCard },
-                        onNavigateToCardList = { currentScreen = Screen.CardList },
-                        onNavigateToImport = { currentScreen = Screen.Import }
-                    )
-                }
-                Screen.AddCard -> {
-                    AddCardScreen(
-                        viewModel = addCardViewModel,
-                        onBack = { currentScreen = Screen.Dashboard }
-                    )
-                }
-                Screen.Review -> {
-                    ReviewScreen(
-                        viewModel = reviewViewModel,
-                        onBack = { currentScreen = Screen.Dashboard }
-                    )
-                }
-                Screen.CardList -> {
-                    CardListScreen(
-                        viewModel = cardListViewModel,
-                        onBack = { currentScreen = Screen.Dashboard }
-                    )
-                }
-                Screen.Import -> {
-                    ImportScreen(
-                        viewModel = importViewModel,
-                        onBack = { currentScreen = Screen.Dashboard }
-                    )
-                }
-            }
+        NavHost(
+            navController = navController,
+            startDestination = DashboardRoute
+        ) {
+            dashboardGraph(
+                onStartReview = { navController.navigate(ReviewRoute) },
+                onNavigateToAddCard = { navController.navigate(AddCardRoute) },
+                onNavigateToCardList = { navController.navigate(CardListRoute) },
+                onNavigateToImport = { navController.navigate(ImportRoute) }
+            )
+            cardsGraph(
+                onNavigateBack = { navController.popBackStack() }
+            )
+            reviewGraph(
+                onNavigateBack = { navController.popBackStack() }
+            )
+            importGraph(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
